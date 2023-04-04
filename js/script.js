@@ -41,12 +41,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const deadline = "2023-05-20";
 
-  function getTimeReamaining(endTime) {
-    const t = Date.parse(endTime) - Date.parse(new Date()),
+  function getTimeRemain(endtime) {
+    const t = Date.parse(endtime) - Date.parse(new Date()),
       days = Math.floor(t / 1000 / 60 / 60 / 24),
       hours = Math.floor((t / 1000 / 60 / 60) % 24),
       minutes = Math.floor((t / 1000 / 60) % 60),
       seconds = Math.floor((t / 1000) % 60);
+
     return {
       total: t,
       days: days,
@@ -56,26 +57,31 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
-  function setTimeClock(selector, endTime) {
-    const timer = document.querySelector(selector),
-      days = timer.querySelector("#days"),
-      hours = timer.querySelector("#hours"),
-      minutes = timer.querySelector("#minutes"),
-      seconds = timer.querySelector("#seconds"),
-      timeIntelval = setInterval(updateClock, 1000);
+  function setTimeClock(selector, endtime) {
+    const clock = document.querySelector(selector),
+      days = clock.querySelector("#days"),
+      hours = clock.querySelector("#hours"),
+      minutes = clock.querySelector("#minutes"),
+      seconds = clock.querySelector("#seconds"),
+      timerId = setInterval(updateTimeClock, 1000);
 
-    function updateClock() {
-      const t = getTimeReamaining(endTime);
+    updateTimeClock();
 
-      days.textContent = t.days;
-      hours.textContent = t.hours;
-      minutes.textContent = t.minutes;
-      seconds.textContent = t.seconds;
+    function updateTimeClock() {
+      const t = getTimeRemain(endtime);
 
-      if (t.total <= 0) clearInterval(timeIntelval);
+      function getZero(num) {
+        return num < 10 ? `0${num}` : num;
+      }
+
+      (days.textContent = getZero(t.days)),
+        (hours.textContent = getZero(t.hours)),
+        (minutes.textContent = getZero(t.minutes)),
+        (seconds.textContent = getZero(t.seconds));
+
+      if (endtime == t.total) clearInterval(timerId);
     }
   }
   setTimeClock(".timer", deadline);
-
   //end DOMContentLoaded
 });
