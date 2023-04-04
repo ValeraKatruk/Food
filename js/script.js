@@ -3,7 +3,8 @@ document.addEventListener("DOMContentLoaded", () => {
     tabs = document.querySelectorAll(".tabheader__item"),
     tabsContent = document.querySelectorAll(".tabcontent");
 
-  // функции показ/скрытие контента Tabs
+// функции показ/скрытие контента Tabs
+
   function hideTabsContent() {
     tabsContent.forEach((element) => {
       element.classList.add("hide");
@@ -37,17 +38,21 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Timer
+// Timer
 
-  const deadline = "2023-05-20";
+  const deadline = "2022-05-20";
 
   function getTimeRemain(endtime) {
-    const t = Date.parse(endtime) - Date.parse(new Date()),
-      days = Math.floor(t / 1000 / 60 / 60 / 24),
-      hours = Math.floor((t / 1000 / 60 / 60) % 24),
-      minutes = Math.floor((t / 1000 / 60) % 60),
-      seconds = Math.floor((t / 1000) % 60);
-
+    const t = Date.parse(endtime) - Date.parse(new Date());
+    let days, hours, minutes, seconds;
+    if (t < 0) {
+      days = hours = minutes = seconds = 0;
+    } else {
+      (days = Math.floor(t / 1000 / 60 / 60 / 24)),
+        (hours = Math.floor((t / 1000 / 60 / 60) % 24)),
+        (minutes = Math.floor((t / 1000 / 60) % 60)),
+        (seconds = Math.floor((t / 1000) % 60));
+    }
     return {
       total: t,
       days: days,
