@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
     tabs = document.querySelectorAll(".tabheader__item"),
     tabsContent = document.querySelectorAll(".tabcontent");
 
-// функции показ/скрытие контента Tabs
+  // функции показ/скрытие контента Tabs
 
   function hideTabsContent() {
     tabsContent.forEach((element) => {
@@ -38,9 +38,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-// Timer
+  // Timer
 
-  const deadline = "2022-05-20";
+  const deadline = "2023-05-20";
 
   function getTimeRemain(endtime) {
     const t = Date.parse(endtime) - Date.parse(new Date());
@@ -88,5 +88,55 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
   setTimeClock(".timer", deadline);
+
+  // Modal
+
+  const openModal = document.querySelectorAll("[data-openmodal]"),
+    closeModal = document.querySelector("[data-closemodal]"),
+    modal = document.querySelector(".modal");
+
+  function showModal() {
+    modal.classList.add("show");
+    modal.classList.remove("hide");
+    document.body.style.overflow = "hidden";
+  }
+  function hideModal() {
+    modal.classList.add("hide");
+    modal.classList.remove("show");
+    document.body.style.overflow = "auto";
+    clearTimeout(timerShowModal);
+  }
+
+  const timerShowModal = setTimeout(showModal, 5000);
+
+  openModal.forEach((element) => {
+    element.addEventListener("click", showModal);
+  });
+
+  closeModal.addEventListener("click", hideModal);
+
+  modal.addEventListener("click", (e) => {
+    if (e.target == modal) {
+      hideModal();
+    }
+  });
+
+  document.body.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && modal.classList.contains("show")) {
+      hideModal();
+    }
+  });
+
+  function showModalByScroll() {
+    if (
+      window.pageYOffset + document.documentElement.clientHeight >=
+      document.documentElement.scrollHeight - 1
+    ) {
+      showModal();
+      document.removeEventListener("scroll", showModalByScroll);
+    }
+  }
+  document.addEventListener("scroll", showModalByScroll);
+
   //end DOMContentLoaded
 });
