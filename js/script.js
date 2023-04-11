@@ -107,7 +107,7 @@ document.addEventListener("DOMContentLoaded", () => {
     clearTimeout(timerShowModal);
   }
 
-  // const timerShowModal = setTimeout(showModal, 5000);
+  //const timerShowModal = setTimeout(showModal, 5000); // вызывает модальное окно 5 сек
 
   openModal.forEach((element) => {
     element.addEventListener("click", showModal);
@@ -138,69 +138,120 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   document.addEventListener("scroll", showModalByScroll);
 
-//Использование классов
-  
-class MenuCard {
-  constructor(src, alt, title, descr, price, parentCard){
-    this.src = src,
-    this.alt = alt,
-    this.title = title,
-    this.descr = descr,
-    this.price = price,
-    this.parent = document.querySelector(parentCard),
-    this.transfer = 80,
-    this.changeToRub()
-  }
+  //Использование классов
 
-  changeToRub(){
-    this.price = this.price * this.transfer;
-  }
+  class MenuCard {
+    constructor(src, alt, title, descr, price, parentCard) {
+      (this.src = src),
+        (this.alt = alt),
+        (this.title = title),
+        (this.descr = descr),
+        (this.price = price),
+        (this.parent = document.querySelector(parentCard)),
+        (this.transfer = 80),
+        this.changeToRub();
+    }
 
-  render(){
-    const card = document.createElement('div');
-    card.innerHTML = `
-    <div class="menu__item">
-      <img src=${this.src} alt=${this.alt}>
-      <h3 class="menu__item-subtitle">${this.title}</h3>
-      <div class="menu__item-descr">${this.descr}</div>
-      <div class="menu__item-divider"></div>
-      <div class="menu__item-price">
-          <div class="menu__item-cost">Цена:</div>
-          <div class="menu__item-total"><span>${this.price}</span> грн/день</div>
+    changeToRub() {
+      this.price = this.price * this.transfer;
+    }
+
+    render() {
+      const card = document.createElement("div");
+      card.innerHTML = `
+      <div class="menu__item">
+        <img src=${this.src} alt=${this.alt}>
+        <h3 class="menu__item-subtitle">${this.title}</h3>
+        <div class="menu__item-descr">${this.descr}</div>
+        <div class="menu__item-divider"></div>
+        <div class="menu__item-price">
+            <div class="menu__item-cost">Цена:</div>
+            <div class="menu__item-total"><span>${this.price}</span> руб/день</div>
+        </div>
       </div>
-    </div>
-    `
-    this.parent.append(card);
+      `;
+      this.parent.append(card);
+    }
   }
-}
 
-function menuCard(){
-  new MenuCard(
-    "img/tabs/vegy.jpg",
-    'vegy',
-    'Меню "Фитнес"',
-    'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
-    9,
-    '.menu .container'
-  ).render();
-  new MenuCard(
-    "img/tabs/elite.jpg",
-    "elite",
-    'Меню “Премиум”',
-    'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
-    15,
-    '.menu .container'
-  ).render();
-  new MenuCard(
-    "img/tabs/post.jpg",
-    'post',
-    'Меню "Постное"',
-    'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.',
-    35,
-    '.menu .container'
-  ).render();
-}
-menuCard();
+  function menuCard() {
+    new MenuCard(
+      "img/tabs/vegy.jpg",
+      "vegy",
+      'Меню "Фитнес"',
+      'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
+      9,
+      ".menu .container"
+    ).render();
+    new MenuCard(
+      "img/tabs/elite.jpg",
+      "elite",
+      "Меню “Премиум”",
+      "В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!",
+      15,
+      ".menu .container"
+    ).render();
+    new MenuCard(
+      "img/tabs/post.jpg",
+      "post",
+      'Меню "Постное"',
+      "Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.",
+      35,
+      ".menu .container"
+    ).render();
+  }
+  menuCard();
+
+  //FORMS
+
+  const forms = document.querySelectorAll("form");
+  const message = {
+    loading: "Загрузка...",
+    succsess: "Спасибо, мы с Вами свяжемся!",
+    failure: "Что-то пошло не так...",
+  };
+
+  forms.forEach((item) => {
+    postForm(item);
+  });
+
+  function postForm(form) {
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const statusMessage = document.createElement("div");
+      statusMessage.classList.add("status");
+      statusMessage.textContent = message.loading;
+      form.append(statusMessage);
+
+      const request = new XMLHttpRequest();
+      request.open("POST", "server.php");
+
+      request.setRequestHeader("Content-type", "aplication/json");
+      const formData = new FormData(form);
+
+      const object = {};
+      formData.forEach(function (value, key) {
+        object[key] = value;
+      });
+      const json = JSON.stringify(object);
+
+      request.send(json);
+
+      request.addEventListener("load", () => {
+        if (request.status == 200) {
+          console.log(request.response);
+          statusMessage.textContent = message.succsess;
+          form.reset();
+          setTimeout(() => {
+            statusMessage.remove();
+          }, 2000);
+        } else {
+          statusMessage.textContent = message.failure;
+        }
+      });
+    });
+  }
 
 
   //end DOMContentLoaded
